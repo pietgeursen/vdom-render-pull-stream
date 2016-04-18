@@ -1,5 +1,5 @@
-var inherits = require('inherits')
-var Writable = require('readable-stream/writable')
+var pull = require('pull-stream')
+
 var vdom = {
   create: require('virtual-dom/create-element'),
   diff: require('virtual-dom/diff'),
@@ -13,8 +13,8 @@ function streamVdom (render, element) {
   var loop = null
   var render = render
   var element = element
-
-  return new Writable({
+    
+  function updateVdom(props)  {
     objectMode: true,
     write: function writeVdom (props, enc, cb) {
       if (loop === null) {
@@ -26,4 +26,6 @@ function streamVdom (render, element) {
       process.nextTick(cb)
     }
   })
+
+  return pull.drain(updateVdom, null)
 }

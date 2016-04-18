@@ -1,7 +1,7 @@
 {
-  "name": "vdom-render-stream",
-  "version": "1.0.2",
-  "description": "stream objects to render virtual dom at element",
+  "name": "vdom-render-pull-stream",
+  "version": "1.0.0",
+  "description": "pull-stream sink objects to render virtual dom at element",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js",
@@ -17,14 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahdinosaur/vdom-render-stream.git"
+    "url": "git+https://github.com/pietgeursen/vdom-render-pull-stream.git"
   },
   "keywords": [],
-  "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
+  "author": "Piet <pietgeursen@gmail.com>",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/ahdinosaur/vdom-render-stream/issues"
-  },
   "homepage": "https://github.com/ahdinosaur/vdom-render-stream#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
@@ -40,9 +37,8 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
-    "inherits": "^2.0.1",
     "main-loop": "^3.2.0",
-    "readable-stream": "^2.0.6",
+    "pull-stream": "^3.3.0",
     "virtual-dom": "^2.1.1"
   }
 }
