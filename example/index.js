@@ -1,5 +1,6 @@
 var h = require('virtual-dom/h')
 var pull = require('pull-stream')
+var raf = require('pull-raf');
 var conways = require('conways')
 
 var classNames = require('classnames')
@@ -18,13 +19,13 @@ function boards(size) {
   }
 
   var board = conways.createBoard(size)
-    board = spawnRandom(board)
+  board = spawnRandom(board)
 
-    return  function read(abort, cb) {
-      if(abort) return cb(true) 
-        board = conways.nextBoard(board)
-          cb(null, board.toJS())
-    }
+  return  function read(abort, cb) {
+    if(abort) return cb(true) 
+      board = conways.nextBoard(board)
+        cb(null, board.toJS())
+  }
 }
 
 function render (board) {
@@ -38,7 +39,7 @@ function render (board) {
 }
 
 var vdomSink = vdomRenderStream(render, main)
-pull(boards(10), vdomSink)
+pull(boards(30), raf(), vdomSink)
 
 
 

@@ -1,11 +1,12 @@
 var pull = require('pull-stream')
+var mainLoop = require('main-loop')
 
 var vdom = {
   create: require('virtual-dom/create-element'),
   diff: require('virtual-dom/diff'),
   patch: require('virtual-dom/patch')
 }
-var mainLoop = require('main-loop')
+
 module.exports = streamVdom
 
 function streamVdom (render, element) {
@@ -19,8 +20,9 @@ function streamVdom (render, element) {
       element.appendChild(loop.target)
     } else {
       loop.update(props)
+      return true
     }
-    return false
+    return true
   }
 
   return pull.drain(updateVdom, null)
