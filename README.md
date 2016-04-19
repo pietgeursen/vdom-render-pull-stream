@@ -6,10 +6,13 @@ stream objects to render virtual dom at element
 npm install --save vdom-render-pull-stream
 ```
 
+### Example
 
-### `VdomRenderPullStream = require('vdom-render-stream')`
+see [./example](http://pietgeursen.github.io/vdom-render-pull-stream/)
 
-### `vdomRenderPullStream = VdomRenderStream(render, element)`
+### `VdomRenderPullStream = require('vdom-render-pull-stream')`
+
+### `vdomRenderPullStream = VdomRenderPullStream(render, element)`
 
 - `render`: `Function` that accepts object as first argument and returns virtual dom tree
 - `element`: `DOMElement` on page to append new element
