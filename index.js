@@ -1,51 +1,45 @@
-var h = require('virtual-dom/virtual-hyperscript/svg')
-var getUserMedia = require('getusermedia')
-var readAudio = require('read-audio')
+var h = require('virtual-dom/h')
+var pull = require('pull-stream')
+var raf = require('pull-raf');
+var conways = require('conways')
+
+var classNames = require('classnames')
+
+var main = document.querySelector('#container')
 var vdomRenderStream = require('../')
 
-var numSamples = 512
-var main = document.querySelector('main')
+function boards(size) {
 
-getUserMedia({
-  audio: true, video: false
-}, function (err, media) {
-  // if error getting user media,
-  if (err) {
-    // blow up
-    throw err
+  function spawnRandom(board){
+    return board.map(function(row) {
+      return row.map(function(cell) {
+        return Math.random() > 0.7 
+      })
+    }) 
   }
 
-  readAudio({
-    source: media,
-    buffer: numSamples,
-    channels: 1
-  }).pipe(
-    vdomRenderStream(render, main)
-  )
-})
+  var board = conways.createBoard(size)
+  board = spawnRandom(board)
 
-function render (audio) {
-  return h('svg', {
-    width: '100%',
-    height: '100%',
-    viewBox: '0 -1 '+numSamples+' 2',
-    preserveAspectRatio: 'none',
-  }, [
-    h('polyline', {
-      stroke: 'black',
-      'stroke-width': '0.005',
-      fill: 'transparent',
-      points: getPoints(audio).join(' ')
-    })
-  ])
-}
-
-function getPoints(audio) {
-  // cheap code for single channel audio
-  var length = audio.shape[0]
-  var points = new Array(length)
-  for (var t = 0; t < length; ++t) {
-    points[t] = t + ',' + audio.data[t]
+  return  function read(abort, cb) {
+    if(abort) return cb(true) 
+      board = conways.nextBoard(board)
+        cb(null, board.toJS())
   }
-  return points
 }
+
+function render (board) {
+  return h('#board',{}, 
+    board.map(function(row){
+      return h('.row', {}, 
+        row.map(function(cell){
+          return h('div', {className: classNames('cell', {alive: cell})})
+        }))
+    }))
+}
+
+var vdomSink = vdomRenderStream(render, main)
+pull(boards(30), raf(), vdomSink)
+
+
+
